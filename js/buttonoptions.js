@@ -7,7 +7,7 @@
 $(init);
 
 var buttonPOSTUrl = "../ui/button";
-var sessionData = {"picCount": 1, "id": "null"};
+var sessionData = {"picCount": 1};
 var buttonIDs = ["#left-button", "#right-button"];
 
 // Because of the strange way that javascript scoping works, in order
@@ -47,15 +47,18 @@ function handleResponse(rawData) {
             changeImage(jsonData["imageURL"]);
         }
         if("buttonLabels" in jsonData) {
+            if (jsonData["buttonLabels"][0]!="null"){
+                $('#left-button').removeAttr('style');
+            }
+            else{
+                $('#left-button').hide();
+            }
             changeButtonLabels(jsonData["buttonLabels"]);
         }
         if("instructionText" in jsonData) {
             $("#instruction-text").html(jsonData["instructionText"]);
         }
         enableButtons();
-        if("disabled" in jsonData) {
-            $(jsonData["disabled"]).prop('disabled', true);
-        }
     }
 }
 
