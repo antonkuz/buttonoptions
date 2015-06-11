@@ -6,7 +6,7 @@ import json
 import Model2
 
 app = Bottle()
-surveyData = dict()
+data = dict()
 d=dict()
 
 
@@ -25,27 +25,29 @@ def do_click():
   if "toSurvey" in sessionData:
     return json.dumps({"toSurvey":True})
 
+  global data
   #generate a cookie on info slide
   if sessionData["picCount"]==1:
     gen_id = ''.join(random.choice(string.ascii_uppercase +
       string.digits) for _ in range(6))
     response.set_cookie('mturk_id', gen_id, max_age=60*60, path='/')
-    global surveyData
-    surveyData[gen_id] = []
+    data[gen_id] = []
     ret = {"imageURL": "images/100.jpg",
            "buttonLabels": ["Clockwise", "Counterclockwise"],
            "instructionText": "Turn the table",
            "sessionData": sessionData}
     sessionData["picCount"] += 1
     return json.dumps(ret)
-  #print("cookie set to: {}".format(request.cookies.get('mturk_id','NOT SET')))  
 
   buttonClicked = requestData["buttonID"]
+  #record in log
+  mturk_id = request.cookies.get('mturk_id','NOT SET')
+  data[mturk_id].append(buttonClicked)
+
   #get next move#
   global d
   currTableTheta, resultState, resultBelief, resultHAction, resultRAction = \
    Model2.getMove(d,request.cookies.get('mturk_id','NOT SET'),buttonClicked)
-  #end get next move#
 
   if currTableTheta==42:
     imageLink = "images/18.jpg"
@@ -73,15 +75,12 @@ def do_click():
 @app.post('/submit_survey')
 def handle_survey():
   mturk_id = request.cookies.get('mturk_id', 'EXPIRED')
-  # with open("log.txt", 'a') as f:
-  #   f.write("user {}: 'a' answer is {}\n".format(mturk_id,request.forms.get('a')))
-  #   f.write("user {}: 'b' answer is {}\n".format(mturk_id,request.forms.get('b')))
-  surveyData[mturk_id].append(request.forms.get('a'))
-  surveyData[mturk_id].append(request.forms.get('b'))
-  print("user {}: 'a' answer is {}".format(mturk_id,request.forms.get('a')))
-  print("user {}: 'b' answer is {}".format(mturk_id,request.forms.get('b')))
-  with open('log.json', 'a') as outfile:
-    json.dump(surveyData, outfile)
+  data[mturk_id].append(request.forms.get('a'))
+  data[mturk_id].append(request.forms.get('b'))
+  #print("user {}: 'a' answer is {}".format(mturk_id,request.forms.get('a')))
+  #print("user {}: 'b' answer is {}".format(mturk_id,request.forms.get('b')))
+  with open('log.json', 'w') as outfile:
+    json.dump(data, outfile)
   return "<p> Your answers have been submitted. ID for mturk: {}".format(mturk_id)
 
 run(app, host='0.0.0.0', port=2223)
