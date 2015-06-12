@@ -83,4 +83,5 @@ def handle_survey():
     json.dump(data, outfile)
   return "<p> Your answers have been submitted. ID for mturk: {}".format(mturk_id)
 
+Model2.globalsInit()
 run(app, host='0.0.0.0', port=2223)
