@@ -12,7 +12,7 @@ data = dict()
 d=dict()
 
 
-@app.route('/static/<path:path>')
+@app.route('<path:path>')
 def server_static(path):
   return static_file(path, root=".")
 
@@ -30,6 +30,20 @@ def do_click():
   global data
   #generate a cookie on info slide
   if sessionData["picCount"]==1:
+    ret = {"imageURL": "images/2.png",
+           "buttonLabels": ["null", "Next"],
+           "instructionText": "Instructions 2/3",
+           "sessionData": sessionData}
+    sessionData["picCount"] += 1
+    return json.dumps(ret)
+  if sessionData["picCount"]==2:
+    ret = {"imageURL": "images/3.png",
+           "buttonLabels": ["null", "Next"],
+           "instructionText": "Instructions 3/3",
+           "sessionData": sessionData}
+    sessionData["picCount"] += 1
+    return json.dumps(ret)
+  if sessionData["picCount"]==3:
     gen_id = ''.join(random.choice(string.ascii_uppercase +
       string.digits) for _ in range(6))
     response.set_cookie('mturk_id', gen_id, max_age=60*60, path='/')

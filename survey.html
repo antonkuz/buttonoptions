@@ -15,13 +15,13 @@
 <script src="lib/bootstrap.min.js"></script>
 
 <!-- Our script -->
-<script type="text/javascript" src="js/buttonoptions.js"></script>
+<script type="text/javascript" src="js/surveyhandler.js"></script>
 
 </head>
 
 <body>
   <div class="container-fluid">
-    <form action="/submit_survey" method="post">
+    <form action="/submit_survey" method="post" id="survey">
       <table class="table table-bordered table-hover">
         <caption>How satisfied were you with the following aspects of the product?</caption>
         <tr>
@@ -68,9 +68,15 @@
             <label><input type="radio" name="b" value="5"> 5</label>
           </td>
         </tr>
+        <tr>
+          <th>Free response</th>
+          <td colspan="2">
+            <input type="text" class="fr1 form-control" placeholder="Type your response here">
+          </td>
+        </tr>
       </table>
       <input value="Submit" type="submit" class="btn btn-default"/>
-    </form>
+  </form>
   </div>
 </body>
 </html>

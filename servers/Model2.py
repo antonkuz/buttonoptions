@@ -31,7 +31,6 @@ def globalsInit():
   print "Loading state names from file"
   with open(folderName+statesFileName, 'r') as stateNamesFile:
     stateNames = numpy.asarray([ line.split(' ') for line in stateNamesFile])[0]
-    print('hello')
 
   print "Loading reachability matrix from file"
   for ra in range(0,NUMOFROBOTACTIONS):
@@ -136,16 +135,18 @@ def idInitiated(id,d):
 #we'll store the class instances in a dictionary with IDs as keys
 #idInitiated helper function checks if id is in the dictionary
 def getMove(d,id,humanAction):
-  #print("IN:id={},action={}".format(id,humanAction))
+  print("IN:id={},action={}".format(id,humanAction))
   #retrieve/create the class instance
   if idInitiated(id,d):
     x = d[id] #dictionary
+    print("Returning user: ID={}".format(id))
   else:
     x = Data(id)
     d[id] = x
+    print("New class instance created: id={}".format(id))
   currTableTheta, resultState, resultBelief, resultHAction, resultRAction = \
     x.stateUpdateFromHumanAction(humanAction)
-  #print("OUT:theta={}".format(currTableTheta))
+  print("OUT:theta={}".format(currTableTheta))
   if currTableTheta==goal1StateTheta or currTableTheta==goal2StateTheta:
     return (42,42,42,42,42) #server knows this is game over
   else:
