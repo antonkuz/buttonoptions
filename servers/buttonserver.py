@@ -4,6 +4,8 @@ import string
 import random
 import json
 import Model2
+import os
+import shutil
 
 app = Bottle()
 data = dict()
@@ -83,5 +85,12 @@ def handle_survey():
     json.dump(data, outfile)
   return "<p> Your answers have been submitted. ID for mturk: {}".format(mturk_id)
 
+def backupLog():
+  i=1
+  while (os.path.isfile("log-backup-{}.json".format(i))):
+    i+=1
+  shutil.copy("log.json","log-backup-{}.json".format(i))
+
 Model2.globalsInit()
+backupLog()
 run(app, host='0.0.0.0', port=2223)
