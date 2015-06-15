@@ -66,12 +66,16 @@ def do_click():
     response.set_cookie('mturk_id', gen_id, max_age=60*60, path='/')
     data[gen_id] = []
     ret = {"imageURL": "images/T100.JPG",
-           "buttonLabels": ['<i class="fa fa-2x fa-long-arrow-left"></i>',
-                            '<i class="fa fa-2x fa-long-arrow-right"></i>'],
+           "buttonLabels": ['<i class="fa fa-2x fa-rotate-right fa-rotate-225"></i>',
+                            '<i class="fa fa-2x fa-rotate-left fa-rotate-135"></i>'],
            "instructionText": "Turn the table",
            "sessionData": sessionData}
     sessionData["picCount"]+=1       
     return json.dumps(ret)
+
+  # if sessionData["picCount"]==5:
+  # #instructions for the second round
+
 
   #record in log
   mturk_id = request.cookies.get('mturk_id','NOT SET')
@@ -84,7 +88,10 @@ def do_click():
 
   if currTableTheta==0 or currTableTheta==180:
     imageLink = "images/T{}.JPG".format(currTableTheta)
-    sessionData["toSurvey"] = True
+    if sessionData["picCount"]==5:
+      sessionData["picCount"]+=1
+    elif sessionData["picCount"]==7:  
+      sessionData["toSurvey"] = True
     ret = {"imageURL": imageLink,
            "buttonLabels": ["null","Proceed to next step"],
            "instructionText": "Done!",
@@ -100,8 +107,8 @@ def do_click():
     '''.format(currTableTheta, resultState, resultBelief, resultHAction, resultRAction)
 
     ret = {"imageURL": "images/T{}.JPG".format(currTableTheta),
-           "buttonLabels": ['<i class="fa fa-2x fa-long-arrow-left"></i>',
-                            '<i class="fa fa-2x fa-long-arrow-right"></i>'],
+           "buttonLabels": ['<i class="fa fa-2x fa-rotate-right fa-rotate-225"></i>',
+                            '<i class="fa fa-2x fa-rotate-left fa-rotate-135"></i>'],
            "instructionText": instructionString,
            "sessionData": sessionData}
     return json.dumps(ret)
