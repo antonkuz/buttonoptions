@@ -21,7 +21,7 @@ R = numpy.zeros([NUMOFSTATES,NUMOFROBOTACTIONS, NUMOFHUMANACTIONS, NUMOFSTATES])
 T = numpy.zeros([NUMOFUNOBSSTATES, NUMOFSTATES, NUMOFROBOTACTIONS, NUMOFSTATES])
 NUMOFALPHAVECTORS = 99
 A = numpy.zeros([NUMOFALPHAVECTORS, NUMOFUNOBSSTATES + 2])
-startStateIndx = NUMOFSTATES-1 #assume that the last state is the starting one
+startStateIndx = NUMOFSTATES-2 #assume that the state before last is the starting one
 
 #uninitiated globals for globalsInit()
 stateNames = None
