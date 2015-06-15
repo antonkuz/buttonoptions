@@ -83,7 +83,7 @@ def do_click():
       Robot did action: {}<br>
     '''.format(currTableTheta, resultState, resultBelief, resultHAction, resultRAction)
 
-    ret = {"imageURL": "images/{}.jpg".format(currTableTheta),
+    ret = {"imageURL": "images/T{}.jpg".format(currTableTheta),
            "buttonLabels": ["Clockwise", "Counterclockwise"],
            "instructionText": instructionString,
            "sessionData": sessionData}
