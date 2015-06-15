@@ -49,7 +49,8 @@ def do_click():
     response.set_cookie('mturk_id', gen_id, max_age=60*60, path='/')
     data[gen_id] = []
     ret = {"imageURL": "images/100.jpg",
-           "buttonLabels": ["Clockwise", "Counterclockwise"],
+           "buttonLabels": ['<i class="fa fa-2x fa-rotate-right"></i>', 
+                            '<i class="fa fa-2x fa-rotate-left"></i>'],
            "instructionText": "Turn the table",
            "sessionData": sessionData}
     sessionData["picCount"] += 1
