@@ -27,36 +27,52 @@ def do_click():
   if "toSurvey" in sessionData:
     return json.dumps({"toSurvey":True})
 
+  #init log variable
   global data
-  #generate a cookie on info slide
+
+  #go to next/prev pic according to button clicked
+  buttonClicked = requestData["buttonID"]
+  if sessionData["picCount"]<4:
+    if buttonClicked==0:
+      sessionData["picCount"] -= 1
+    elif buttonClicked==1:
+      sessionData["picCount"] += 1
+
   if sessionData["picCount"]==1:
-    ret = {"imageURL": "images/2.png",
+    ret = {"imageURL": "images/1.jpg",
            "buttonLabels": ["null", "Next"],
+           "instructionText": "Instructions 1/3",
+           "sessionData": sessionData}
+    return json.dumps(ret)
+
+  if sessionData["picCount"]==2:
+    ret = {"imageURL": "images/2.png",
+           "buttonLabels": ["Prev", "Next"],
            "instructionText": "Instructions 2/3",
            "sessionData": sessionData}
-    sessionData["picCount"] += 1
     return json.dumps(ret)
-  if sessionData["picCount"]==2:
+
+  if sessionData["picCount"]==3:
     ret = {"imageURL": "images/3.png",
-           "buttonLabels": ["null", "Next"],
+           "buttonLabels": ["Prev", "Next"],
            "instructionText": "Instructions 3/3",
            "sessionData": sessionData}
-    sessionData["picCount"] += 1
     return json.dumps(ret)
-  if sessionData["picCount"]==3:
+
+  if sessionData["picCount"]==4:
+    #generate a cookie with user's ID
     gen_id = ''.join(random.choice(string.ascii_uppercase +
       string.digits) for _ in range(6))
     response.set_cookie('mturk_id', gen_id, max_age=60*60, path='/')
     data[gen_id] = []
-    ret = {"imageURL": "images/100.jpg",
+    ret = {"imageURL": "images/T100.jpg",
            "buttonLabels": ['<i class="fa fa-2x fa-rotate-right"></i>', 
                             '<i class="fa fa-2x fa-rotate-left"></i>'],
            "instructionText": "Turn the table",
            "sessionData": sessionData}
-    sessionData["picCount"] += 1
+    sessionData["picCount"]+=1       
     return json.dumps(ret)
 
-  buttonClicked = requestData["buttonID"]
   #record in log
   mturk_id = request.cookies.get('mturk_id','NOT SET')
   data[mturk_id].append(buttonClicked)
@@ -66,12 +82,12 @@ def do_click():
   currTableTheta, resultState, resultBelief, resultHAction, resultRAction = \
    Model2.getMove(d,request.cookies.get('mturk_id','NOT SET'),buttonClicked)
 
-  if currTableTheta==42:
-    imageLink = "images/18.jpg"
+  if currTableTheta==0 or currTableTheta==180:
+    imageLink = "images/T{}.jpg"
     sessionData["toSurvey"] = True
     ret = {"imageURL": imageLink,
            "buttonLabels": ["null","Proceed to next step"],
-           "instructionText": "GAME OVER",
+           "instructionText": "Done!",
            "sessionData": sessionData}
     return json.dumps(ret)
   else:
@@ -84,7 +100,8 @@ def do_click():
     '''.format(currTableTheta, resultState, resultBelief, resultHAction, resultRAction)
 
     ret = {"imageURL": "images/T{}.jpg".format(currTableTheta),
-           "buttonLabels": ["Clockwise", "Counterclockwise"],
+           "buttonLabels": ['<i class="fa fa-2x fa-rotate-right"></i>', 
+                            '<i class="fa fa-2x fa-rotate-left"></i>'],
            "instructionText": instructionString,
            "sessionData": sessionData}
     return json.dumps(ret)

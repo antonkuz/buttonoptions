@@ -147,7 +147,4 @@ def getMove(d,id,humanAction):
   currTableTheta, resultState, resultBelief, resultHAction, resultRAction = \
     x.stateUpdateFromHumanAction(humanAction)
   print("OUT:theta={}".format(currTableTheta))
-  if currTableTheta==goal1StateTheta or currTableTheta==goal2StateTheta:
-    return (42,42,42,42,42) #server knows this is game over
-  else:
-    return (currTableTheta, resultState, resultBelief, resultHAction, resultRAction)
+  return (currTableTheta, resultState, resultBelief, resultHAction, resultRAction)
