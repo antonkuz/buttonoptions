@@ -12,14 +12,14 @@ statesFileName = 'obsState.dat'
 startStateTheta = 100
 goal1StateTheta = 0
 goal2StateTheta = 180
-NUMOFSTATES = 77
+NUMOFSTATES = 42
 NUMOFROBOTACTIONS = 2
 NUMOFHUMANACTIONS = 2
 NUMOFUNOBSSTATES = 5
 STR_ACTIONS = ['ROTATE_CLOCKWISE', 'ROTATE_COUNTER_CLOCKWISE']
 R = numpy.zeros([NUMOFSTATES,NUMOFROBOTACTIONS, NUMOFHUMANACTIONS, NUMOFSTATES])
 T = numpy.zeros([NUMOFUNOBSSTATES, NUMOFSTATES, NUMOFROBOTACTIONS, NUMOFSTATES])
-NUMOFALPHAVECTORS = 337
+NUMOFALPHAVECTORS = 99
 A = numpy.zeros([NUMOFALPHAVECTORS, NUMOFUNOBSSTATES + 2])
 startStateIndx = NUMOFSTATES-1 #assume that the last state is the starting one
 
@@ -108,7 +108,7 @@ class Data:
   def getTableThetaFromState(self, ss):
     thetaIndx = int(ss/4)
     if(thetaIndx>=0) and (thetaIndx<=18):
-     return thetaIndx*10
+     return thetaIndx*20
     else:
      return startStateTheta
 
