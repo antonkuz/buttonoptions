@@ -65,9 +65,9 @@ def do_click():
       string.digits) for _ in range(6))
     response.set_cookie('mturk_id', gen_id, max_age=60*60, path='/')
     data[gen_id] = []
-    ret = {"imageURL": "images/T100.jpg",
-           "buttonLabels": ['<i class="fa fa-2x fa-rotate-right"></i>', 
-                            '<i class="fa fa-2x fa-rotate-left"></i>'],
+    ret = {"imageURL": "images/T100.JPG",
+           "buttonLabels": ['<i class="fa fa-2x fa-long-arrow-left"></i>',
+                            '<i class="fa fa-2x fa-long-arrow-right"></i>'],
            "instructionText": "Turn the table",
            "sessionData": sessionData}
     sessionData["picCount"]+=1       
@@ -83,7 +83,7 @@ def do_click():
    Model2.getMove(d,request.cookies.get('mturk_id','NOT SET'),buttonClicked)
 
   if currTableTheta==0 or currTableTheta==180:
-    imageLink = "images/T{}.jpg"
+    imageLink = "images/T{}.JPG".format(currTableTheta)
     sessionData["toSurvey"] = True
     ret = {"imageURL": imageLink,
            "buttonLabels": ["null","Proceed to next step"],
@@ -99,9 +99,9 @@ def do_click():
       Robot did action: {}<br>
     '''.format(currTableTheta, resultState, resultBelief, resultHAction, resultRAction)
 
-    ret = {"imageURL": "images/T{}.jpg".format(currTableTheta),
-           "buttonLabels": ['<i class="fa fa-2x fa-rotate-right"></i>', 
-                            '<i class="fa fa-2x fa-rotate-left"></i>'],
+    ret = {"imageURL": "images/T{}.JPG".format(currTableTheta),
+           "buttonLabels": ['<i class="fa fa-2x fa-long-arrow-left"></i>',
+                            '<i class="fa fa-2x fa-long-arrow-right"></i>'],
            "instructionText": instructionString,
            "sessionData": sessionData}
     return json.dumps(ret)

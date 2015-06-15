@@ -52,6 +52,7 @@ function handleResponse(rawData) {
             }
             else{
                 $('#left-button').hide();
+                $('#right-button').attr('style','width:200px !important;');
             }
             changeButtonLabels(jsonData["buttonLabels"]);
         }
