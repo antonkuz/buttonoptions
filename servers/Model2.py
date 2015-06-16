@@ -22,6 +22,9 @@ T = numpy.zeros([NUMOFUNOBSSTATES, NUMOFSTATES, NUMOFROBOTACTIONS, NUMOFSTATES])
 NUMOFALPHAVECTORS = 99
 A = numpy.zeros([NUMOFALPHAVECTORS, NUMOFUNOBSSTATES + 2])
 startStateIndx = NUMOFSTATES-2 #assume that the state before last is the starting one
+goal1RestartStateIndx = 20
+goal2RestartStateIndx = 23
+
 
 #uninitiated globals for globalsInit()
 stateNames = None
@@ -131,6 +134,28 @@ def idInitiated(id,d):
   else:
     return False
 
+#the server will call this function passing the id and the button pressed.
+#it will then reset the observable state for that class
+
+def restartTask(d, id, prevTableTheta):
+  print("IN:id={}".format(id))
+  #retrieve/create the class instance
+  if idInitiated(id,d):
+    x = d[id] #dictionary
+    print("Returning user: ID={}".format(id))
+  else:
+    x = Data(id)
+    d[id] = x  
+    print ("Model2py@restartTask Error: No class instance found!")
+    print("New class instance created: id={}".format(id))
+  #logic that says what the next state will be based on the previous goal
+  if prevTableTheta == goal1StateTheta:
+    x.currState = goal1RestartStateIndx
+  elif prevTableTheta == goal2StateTheta:
+    x.currState = goal2RestartStateIndx
+  else:
+    print ("Model2py@restartTask invalid theta value {}".format(prevTableTheta))
+  
 #the server will call this function passing the id and the button pressed
 #we'll store the class instances in a dictionary with IDs as keys
 #idInitiated helper function checks if id is in the dictionary
@@ -147,4 +172,14 @@ def getMove(d,id,humanAction):
   currTableTheta, resultState, resultBelief, resultHAction, resultRAction = \
     x.stateUpdateFromHumanAction(humanAction)
   print("OUT:theta={}".format(currTableTheta))
-  return (currTableTheta, resultState, resultBelief, resultHAction, resultRAction)
+  if(resultHAction=='ROTATE_CLOCKWISE')and(resultRAction=='ROTATE_CLOCKWISE'):
+     message = 'You turned the table CLOCKWISE. HERB did the same action. <br> The table turned 20 degrees.'
+  elif(resultHAction == 'ROTATE_COUNTER_CLOCKWISE')and(resultRAction == 'ROTATE_COUNTER_CLOCKWISE'):
+     message = 'You turned the table COUNTER-CLOCKWISE. HERB did the same action. <br> The table turned 20 degrees.'
+  elif(resultHAction == 'ROTATE_CLOCKWISE')and(resultRAction == 'ROTATE_COUNTER_CLOCKWISE'):
+     message = 'You tried to turn the table CLOCKWISE. HERB tried to turn the table COUNTER-CLOCKWISE. <br> The table did not turn.'
+  elif(resultHAction == 'ROTATE_COUNTER_CLOCKWISE')and(resultRAction == 'ROTATE_CLOCKWISE'):
+     message = 'You tried to turn the table COUNTER-CLOCKWISE. HERB tried to turn the table CLOCKWISE. <br> The table did not turn.'
+  else:
+      message = 'Model2py@getMove error: unknown string!' 
+  return (currTableTheta, resultState, resultBelief, resultHAction, resultRAction, message)

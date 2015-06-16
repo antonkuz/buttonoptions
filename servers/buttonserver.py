@@ -6,10 +6,12 @@ import json
 import Model2
 import os
 import shutil
+import time 
 
 app = Bottle()
 data = dict()
 d=dict()
+prevTableTheta = -1
 
 
 @app.route('<path:path>')
@@ -18,6 +20,11 @@ def server_static(path):
 
 @app.post('/ui/button') # or @route('/login', method='POST')
 def do_click():
+  global prevTableTheta
+
+  #add artificial delay
+  time.sleep(0.5)
+
   #manually set value
   totalPicsNum = 19
   survey_duration = 60*60 #1 hour. after that cookie expires
@@ -32,34 +39,43 @@ def do_click():
 
   #go to next/prev pic according to button clicked
   buttonClicked = requestData["buttonID"]
-  if sessionData["picCount"]<4:
+  if sessionData["picCount"]<5:
     if buttonClicked==0:
       sessionData["picCount"] -= 1
     elif buttonClicked==1:
       sessionData["picCount"] += 1
 
   if sessionData["picCount"]==1:
-    ret = {"imageURL": "images/1.jpg",
+    ret = {"imageURL": "images/Slide1.jpg",
            "buttonLabels": ["null", "Next"],
            "instructionText": "Instructions 1/3",
-           "sessionData": sessionData}
+           "sessionData": sessionData,
+		   "buttonClass": "btn-primary"}
     return json.dumps(ret)
 
   if sessionData["picCount"]==2:
-    ret = {"imageURL": "images/2.png",
-           "buttonLabels": ["Prev", "Next"],
-           "instructionText": "Instructions 2/3",
-           "sessionData": sessionData}
+    ret = {"imageURL": "images/Slide2.jpg",
+           "buttonLabels": ["null", "Next"],
+           "instructionText": " ",
+           "sessionData": sessionData,
+		   "buttonClass": "btn-primary"}
     return json.dumps(ret)
 
   if sessionData["picCount"]==3:
-    ret = {"imageURL": "images/3.png",
+    ret = {"imageURL": "images/Slide3.jpg",
            "buttonLabels": ["Prev", "Next"],
-           "instructionText": "Instructions 3/3",
+           "instructionText": " ",
+           "sessionData": sessionData}
+    return json.dumps(ret)
+	
+  if sessionData["picCount"]==4:
+    ret = {"imageURL": "images/Slide4.jpg",
+           "buttonLabels": ["Prev", "START"],
+           "instructionText": " ",
            "sessionData": sessionData}
     return json.dumps(ret)
 
-  if sessionData["picCount"]==4:
+  if sessionData["picCount"]==5:
     #generate a cookie with user's ID
     gen_id = ''.join(random.choice(string.ascii_uppercase +
       string.digits) for _ in range(6))
@@ -68,33 +84,55 @@ def do_click():
     ret = {"imageURL": "images/T100.JPG",
            "buttonLabels": ['<i class="fa fa-2x fa-rotate-right fa-rotate-225"></i>',
                             '<i class="fa fa-2x fa-rotate-left fa-rotate-135"></i>'],
-           "instructionText": "Turn the table",
-           "sessionData": sessionData}
+           "instructionText": "Choose how you would like to rotate the table.",
+           "sessionData": sessionData,
+		   "buttonClass": "btn-success"}
     sessionData["picCount"]+=1       
     return json.dumps(ret)
+  
+  if sessionData["picCount"]==7:
+    ret = {"imageURL": "images/Slide5.jpg",
+           "buttonLabels": ["null", "START"],
+           "instructionText": " ",
+           "sessionData": sessionData,
+		   "buttonClass": "btn-primary"}
+    sessionData["picCount"]+=1       
+    return json.dumps(ret)
+
+  if sessionData["picCount"]==8:
+    Model2.restartTask(d,request.cookies.get('mturk_id','NOT SET'),prevTableTheta)
+    ret = {"imageURL": "images/T100.JPG",
+           "buttonLabels": ['<i class="fa fa-2x fa-rotate-right fa-rotate-225"></i>',
+                            '<i class="fa fa-2x fa-rotate-left fa-rotate-135"></i>'],
+           "instructionText": "Choose how you would like to rotate the table.",
+           "sessionData": sessionData,
+		   "buttonClass": "btn-success"}
+    sessionData["picCount"]+=1  
+    return json.dumps(ret)	
+	
+  #record in log
+  mturk_id = request.cookies.get('mturk_id','NOT SET')
+  data[mturk_id].append(buttonClicked)
+  
 
   # if sessionData["picCount"]==5:
   # #instructions for the second round
 
-
-  #record in log
-  mturk_id = request.cookies.get('mturk_id','NOT SET')
-  data[mturk_id].append(buttonClicked)
-
   #get next move#
   global d
-  currTableTheta, resultState, resultBelief, resultHAction, resultRAction = \
+  currTableTheta, resultState, resultBelief, resultHAction, resultRAction, message = \
    Model2.getMove(d,request.cookies.get('mturk_id','NOT SET'),buttonClicked)
 
   if currTableTheta==0 or currTableTheta==180:
     imageLink = "images/T{}.JPG".format(currTableTheta)
-    if sessionData["picCount"]==5:
-      sessionData["picCount"]+=1
-    elif sessionData["picCount"]==7:  
+    if sessionData["picCount"]==6:
+	  prevTableTheta = currTableTheta
+	  sessionData["picCount"]+=1
+    elif sessionData["picCount"]==8:  
       sessionData["toSurvey"] = True
     ret = {"imageURL": imageLink,
-           "buttonLabels": ["null","Proceed to next step"],
-           "instructionText": "Done!",
+           "buttonLabels": ["null","Next"],
+            "instructionText": "The table is in a horizontal position. You finished the task!",
            "sessionData": sessionData}
     return json.dumps(ret)
   else:
@@ -104,13 +142,15 @@ def do_click():
       The current belief is: {}<br>
       You did action: {}<br>
       Robot did action: {}<br>
-    '''.format(currTableTheta, resultState, resultBelief, resultHAction, resultRAction)
+	  {}<br>
+    '''.format(currTableTheta, resultState, resultBelief, resultHAction, resultRAction, message)
 
     ret = {"imageURL": "images/T{}.JPG".format(currTableTheta),
            "buttonLabels": ['<i class="fa fa-2x fa-rotate-right fa-rotate-225"></i>',
                             '<i class="fa fa-2x fa-rotate-left fa-rotate-135"></i>'],
            "instructionText": instructionString,
-           "sessionData": sessionData}
+           "sessionData": sessionData,
+		   "buttonClass": "btn-success"}
     return json.dumps(ret)
 
 @app.post('/submit_survey')

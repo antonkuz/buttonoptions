@@ -52,10 +52,16 @@ function handleResponse(rawData) {
             }
             else{
                 $('#left-button').hide();
-                $('#right-button').attr('style','width:200px !important;');
+                //$('#right-button').attr('style','width:200px !important;');
             }
             changeButtonLabels(jsonData["buttonLabels"]);
         }
+		
+		var bclasses = "btn-primary btn-success btn-danger btn-warning";
+		var newclass = jsonData["buttonClass"] || "btn-primary";
+		console.log(newclass);
+		$(".ui-button").removeClass(bclasses).addClass(newclass);
+	
         if("instructionText" in jsonData) {
             $("#instruction-text").html(jsonData["instructionText"]);
         }
