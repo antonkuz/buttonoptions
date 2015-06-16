@@ -182,4 +182,4 @@ def getMove(d,id,humanAction):
      message = 'You tried to turn the table COUNTER-CLOCKWISE. HERB tried to turn the table CLOCKWISE. <br> The table did not turn.'
   else:
       message = 'Model2py@getMove error: unknown string!' 
-  return (currTableTheta, resultState, resultBelief, resultHAction, resultRAction, message)
+  return (currTableTheta, message)

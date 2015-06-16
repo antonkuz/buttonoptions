@@ -93,17 +93,21 @@ def do_click():
     sessionData["picCount"]+=1       
     return json.dumps(ret)
   
+  #following code may need mturk_id, so get it once now
+  mturk_id = request.cookies.get('mturk_id','NOT SET')
+
   if sessionData["picCount"]==7:
     ret = {"imageURL": "images/Slide5.JPG",
            "buttonLabels": ["null", "START"],
            "instructionText": " ",
            "sessionData": sessionData,
        "buttonClass": "btn-primary"}
+    data[mturk_id].append("round two")
     sessionData["picCount"]+=1       
     return json.dumps(ret)
 
   if sessionData["picCount"]==8:
-    Model2.restartTask(d,request.cookies.get('mturk_id','NOT SET'),prevTableTheta)
+    Model2.restartTask(d,mturk_id,prevTableTheta)
     ret = {"imageURL": "images/T100.JPG",
            "buttonLabels": ['<i class="fa fa-2x fa-rotate-right fa-rotate-225"></i>',
                             '<i class="fa fa-2x fa-rotate-left fa-rotate-135"></i>'],
@@ -114,12 +118,11 @@ def do_click():
     return json.dumps(ret)  
   
   #record in log
-  mturk_id = request.cookies.get('mturk_id','NOT SET')
   data[mturk_id].append(buttonClicked)
 
   #get next move#
-  currTableTheta, resultState, resultBelief, resultHAction, resultRAction, message = \
-   Model2.getMove(d,request.cookies.get('mturk_id','NOT SET'),buttonClicked)
+  currTableTheta, message = \
+    Model2.getMove(d,request.cookies.get('mturk_id','NOT SET'),buttonClicked)
 
   if currTableTheta==0 or currTableTheta==180:
     imageLink = "images/T{}.JPG".format(currTableTheta)
@@ -134,20 +137,10 @@ def do_click():
            "sessionData": sessionData}
     return json.dumps(ret)
   else:
-    instructionString ='''
-      The current angle is: {}<br>
-      {}<br>
-    '''.format(currTableTheta, message)
-    # The current state is: {}<br>
-    #   The current belief is: {}<br>
-    #   You did action: {}<br>
-    #   Robot did action: {}<br>
-    #, resultState, resultBelief, resultHAction, resultRAction, 
-
     ret = {"imageURL": "images/T{}.JPG".format(currTableTheta),
            "buttonLabels": ['<i class="fa fa-2x fa-rotate-right fa-rotate-225"></i>',
                             '<i class="fa fa-2x fa-rotate-left fa-rotate-135"></i>'],
-           "instructionText": instructionString,
+           "instructionText": message,
            "sessionData": sessionData,
            "buttonClass": "btn-success"}
     return json.dumps(ret)
@@ -167,7 +160,7 @@ def backupLog():
   while (os.path.isfile("log-backup-{}.json".format(i))):
     i+=1
   shutil.copy("log.json","log-backup-{}.json".format(i))
-
+ 
 Model2.globalsInit()
 backupLog()
 run(app, host='0.0.0.0', port=2223)
