@@ -53,7 +53,7 @@ def do_click():
            "buttonLabels": ["null", "Next"],
            "instructionText": "Instructions 1/3",
            "sessionData": sessionData,
-		   "buttonClass": "btn-primary"}
+       "buttonClass": "btn-primary"}
     return json.dumps(ret)
 
   if sessionData["picCount"]==2:
@@ -61,7 +61,7 @@ def do_click():
            "buttonLabels": ["null", "Next"],
            "instructionText": " ",
            "sessionData": sessionData,
-		   "buttonClass": "btn-primary"}
+       "buttonClass": "btn-primary"}
     return json.dumps(ret)
 
   if sessionData["picCount"]==3:
@@ -70,7 +70,7 @@ def do_click():
            "instructionText": " ",
            "sessionData": sessionData}
     return json.dumps(ret)
-	
+  
   if sessionData["picCount"]==4:
     ret = {"imageURL": "images/Slide4.JPG",
            "buttonLabels": ["Prev", "START"],
@@ -89,7 +89,7 @@ def do_click():
                             '<i class="fa fa-2x fa-rotate-left fa-rotate-135"></i>'],
            "instructionText": "Choose how you would like to rotate the table.",
            "sessionData": sessionData,
-		   "buttonClass": "btn-success"}
+       "buttonClass": "btn-success"}
     sessionData["picCount"]+=1       
     return json.dumps(ret)
   
@@ -98,7 +98,7 @@ def do_click():
            "buttonLabels": ["null", "START"],
            "instructionText": " ",
            "sessionData": sessionData,
-		   "buttonClass": "btn-primary"}
+       "buttonClass": "btn-primary"}
     sessionData["picCount"]+=1       
     return json.dumps(ret)
 
@@ -109,10 +109,10 @@ def do_click():
                             '<i class="fa fa-2x fa-rotate-left fa-rotate-135"></i>'],
            "instructionText": "Choose how you would like to rotate the table.",
            "sessionData": sessionData,
-		   "buttonClass": "btn-success"}
+       "buttonClass": "btn-success"}
     sessionData["picCount"]+=1  
-    return json.dumps(ret)	
-	
+    return json.dumps(ret)  
+  
   #record in log
   mturk_id = request.cookies.get('mturk_id','NOT SET')
   data[mturk_id].append(buttonClicked)
@@ -124,42 +124,42 @@ def do_click():
   if currTableTheta==0 or currTableTheta==180:
     imageLink = "images/T{}.JPG".format(currTableTheta)
     if sessionData["picCount"]==6:
-	  prevTableTheta = currTableTheta
-	  sessionData["picCount"]+=1
-    elif sessionData["picCount"]==8:  
+      prevTableTheta = currTableTheta
+      sessionData["picCount"]+=1
+    elif sessionData["picCount"]==9:
       sessionData["toSurvey"] = True
     ret = {"imageURL": imageLink,
            "buttonLabels": ["null","Next"],
-            "instructionText": "The table is in a horizontal position. You finished the task!",
+           "instructionText": "The table is in a horizontal position. You finished the task!",
            "sessionData": sessionData}
     return json.dumps(ret)
   else:
     instructionString ='''
       The current angle is: {}<br>
-      The current state is: {}<br>
-      The current belief is: {}<br>
-      You did action: {}<br>
-      Robot did action: {}<br>
-	  {}<br>
-    '''.format(currTableTheta, resultState, resultBelief, resultHAction, resultRAction, message)
+      {}<br>
+    '''.format(currTableTheta, message)
+    # The current state is: {}<br>
+    #   The current belief is: {}<br>
+    #   You did action: {}<br>
+    #   Robot did action: {}<br>
+    #, resultState, resultBelief, resultHAction, resultRAction, 
 
     ret = {"imageURL": "images/T{}.JPG".format(currTableTheta),
            "buttonLabels": ['<i class="fa fa-2x fa-rotate-right fa-rotate-225"></i>',
                             '<i class="fa fa-2x fa-rotate-left fa-rotate-135"></i>'],
            "instructionText": instructionString,
            "sessionData": sessionData,
-		   "buttonClass": "btn-success"}
+           "buttonClass": "btn-success"}
     return json.dumps(ret)
 
 @app.post('/submit_survey')
 def handle_survey():
   mturk_id = request.cookies.get('mturk_id', 'EXPIRED')
-  data[mturk_id].append(request.forms.get('a'))
-  data[mturk_id].append(request.forms.get('b'))
-  #print("user {}: 'a' answer is {}".format(mturk_id,request.forms.get('a')))
-  #print("user {}: 'b' answer is {}".format(mturk_id,request.forms.get('b')))
+  for i in xrange(1,16):
+    data[mturk_id].append(request.forms.get(str(i)))
   with open('log.json', 'w') as outfile:
     json.dump(data, outfile)
+  print("User {} submitted the survey".format(mturk_id))
   return "<p> Your answers have been submitted. ID for mturk: {}".format(mturk_id)
 
 def backupLog():
