@@ -13,12 +13,19 @@ data = dict()
 d=dict()
 prevTableTheta = -1
 
-
+#loads static pages from the directory
+#example: website.com/index.html
+#server will load index.html from the directory
 @app.route('<path:path>')
 def server_static(path):
   return static_file(path, root=".")
 
-@app.post('/ui/button') # or @route('/login', method='POST')
+#handles buttonpress post requests by buttonClicked function in the js
+#the input is provided through the request data
+#we retrieve it using json.loads
+#the server decides what to load next by looking into the request data
+# and seeing what the current state of the webapp is
+@app.post('/ui/button')
 def do_click():
   global prevTableTheta
 
@@ -31,6 +38,8 @@ def do_click():
   #manually set value
   totalPicsNum = 19
   survey_duration = 60*60 #1 hour. after that cookie expires
+
+  #get the data that the buttonClicked posted
   requestData = json.loads(request.body.getvalue())
   sessionData = requestData["sessionData"]
 
@@ -145,6 +154,10 @@ def do_click():
            "buttonClass": "btn-success"}
     return json.dumps(ret)
 
+
+#when the survey is approved by surveyhandler.js, the button requests this url
+#handle_survey records the responses and gives a one line html page in response
+#web browsers automatically add head/body syntax for this case
 @app.post('/submit_survey')
 def handle_survey():
   mturk_id = request.cookies.get('mturk_id', 'EXPIRED')
@@ -155,6 +168,8 @@ def handle_survey():
   print("User {} submitted the survey".format(mturk_id))
   return "<p> Your answers have been submitted. ID for mturk: {}".format(mturk_id)
 
+#the server only writes to log.json, so if there's some data there already,
+#we'll copy it to another file 
 def backupLog():
   i=1
   while (os.path.isfile("log-backup-{}.json".format(i))):

@@ -1,5 +1,8 @@
+// surveyhandler.js:
+// -catches the survey submit button press
+// -stops from going to the page the submit button linked to
+//  if any of the inputs is empty
 jQuery(function ($) {
-
     function demandCompletion(e){
         e.preventDefault();
         $(".text-danger").removeClass('hide');
