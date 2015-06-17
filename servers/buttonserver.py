@@ -21,6 +21,7 @@ def server_static(path):
 @app.post('/ui/button') # or @route('/login', method='POST')
 def do_click():
   global prevTableTheta
+  
 
   #init dictionary of users
   global d
@@ -84,6 +85,10 @@ def do_click():
       string.digits) for _ in range(6))
     response.set_cookie('mturk_id', gen_id, max_age=60*60, path='/')
     data[gen_id] = []
+    #get ip
+    ip = request.environ.get('REMOTE_ADDR')
+    data[gen_id].append(ip)
+
     ret = {"imageURL": "images/T100.JPG",
            "buttonLabels": ['<i class="fa fa-2x fa-rotate-right fa-rotate-225"></i>',
                             '<i class="fa fa-2x fa-rotate-left fa-rotate-135"></i>'],

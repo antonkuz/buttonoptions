@@ -22,10 +22,10 @@
 <script type="text/javascript" src="js/surveyhandler.js"></script>
 
 </head>
-
 <body>
   <div class="container">
     <form action="/submit_survey" method="post" id="survey">
+      <h3>Thank you for your participation! To finish this study, answer the following questionnaire. </h3>
       <br>
       1. What was the color of the robot head?
       <div class="radio">
@@ -78,21 +78,27 @@
       <br>
       <br>
 
-      <p>5. Were the instructions clear? Add any additional comments on the experiment</p>
+      <p>5. Were the instructions clear? Add any additional comments on the experiment.</p>
       <input type="text" name=15 class="fr2 form-control" placeholder="Comment on instructions">
       <br>
+      <br>
 
-      <table class="table table-bordered table-hover">
-        <caption>Rate your agreement to the following statements</caption>
+      <p> 6.Rate your agreement to the following statements </p>
+      <table class="table table-bordered table-hover fixed">
+        <!--caption></caption-->
+        <col width="100px" />
+        <col width="100px" />
+        <col width="100px" />
+        <col width="100px" />
+        <col width="100px" />
+        <col width="100px" />
         <tr>
           <th>&nbsp;</th>
-          <th>Entirely Disagree</th>
-          <th>Mostly Disagree</th>
-          <th>Somewhat Disagree</th>
+          <th>Strongly Disagree</th>
+          <th>Disagree</th>
           <th>Neither Agree nor Disagree</th>
-          <th>Somewhat Agree</th>
-          <th>Mostly Agree</th>
-          <th>Entirely Agree</th>
+          <th>Agree</th>
+          <th>Strongly Agree</th>
         </tr>
         <tr>
           <th>HERB is trustworthy</th>
@@ -110,12 +116,6 @@
           </td>
           <td>
             <label><input type="radio" name=5 value="5"> 5</label>
-          </td>
-          <td>
-            <label><input type="radio" name=5 value="6"> 6</label>
-          </td>
-          <td>
-            <label><input type="radio" name=5 value="7"> 7</label>
           </td>
         </tr>
         <tr>
@@ -135,12 +135,6 @@
           <td>
             <label><input type="radio" name=6 value="5"> 5</label>
           </td>
-          <td>
-            <label><input type="radio" name=6 value="6"> 6</label>
-          </td>
-          <td>
-            <label><input type="radio" name=6 value="7"> 7</label>
-          </td>
         </tr>
         <tr>
           <th>HERB is intelligent</th>
@@ -158,12 +152,6 @@
           </td>
           <td>
             <label><input type="radio" name=7 value="5"> 5</label>
-          </td>
-          <td>
-            <label><input type="radio" name=7 value="6"> 6</label>
-          </td>
-          <td>
-            <label><input type="radio" name=7 value="7"> 7</label>
           </td>
         </tr>
         <tr>
@@ -183,12 +171,6 @@
           <td>
             <label><input type="radio" name=8 value="5"> 5</label>
           </td>
-          <td>
-            <label><input type="radio" name=8 value="6"> 6</label>
-          </td>
-          <td>
-            <label><input type="radio" name=8 value="7"> 7</label>
-          </td>
         </tr>
         <tr>
           <th>I was satisfied with HERB and my performance</th>
@@ -206,12 +188,6 @@
           </td>
           <td>
             <label><input type="radio" name=9 value="5"> 5</label>
-          </td>
-          <td>
-            <label><input type="radio" name=9 value="6"> 6</label>
-          </td>
-          <td>
-            <label><input type="radio" name=9 value="7"> 7</label>
           </td>
         </tr>
         <tr>
@@ -231,12 +207,6 @@
           <td>
             <label><input type="radio" name=10 value="5"> 5</label>
           </td>
-          <td>
-            <label><input type="radio" name=10 value="6"> 6</label>
-          </td>
-          <td>
-            <label><input type="radio" name=10 value="7"> 7</label>
-          </td>
         </tr>
         <tr>
           <th>HERB and I worked towards mutually agreed upon goals</th>
@@ -254,12 +224,6 @@
           </td>
           <td>
             <label><input type="radio" name=11 value="5"> 5</label>
-          </td>
-          <td>
-            <label><input type="radio" name=11 value="6"> 6</label>
-          </td>
-          <td>
-            <label><input type="radio" name=11 value="7"> 7</label>
           </td>
         </tr>
         <tr>
@@ -279,12 +243,6 @@
           <td>
             <label><input type="radio" name=12 value="5"> 5</label>
           </td>
-          <td>
-            <label><input type="radio" name=12 value="6"> 6</label>
-          </td>
-          <td>
-            <label><input type="radio" name=12 value="7"> 7</label>
-          </td>
         </tr>
         <tr>
           <th>HERB's actions were reasonable</th>
@@ -302,12 +260,6 @@
           </td>
           <td>
             <label><input type="radio" name=13 value="5"> 5</label>
-          </td>
-          <td>
-            <label><input type="radio" name=13 value="6"> 6</label>
-          </td>
-          <td>
-            <label><input type="radio" name=13 value="7"> 7</label>
           </td>
         </tr>
       </table>
