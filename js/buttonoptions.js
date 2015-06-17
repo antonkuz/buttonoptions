@@ -36,12 +36,17 @@ function buttonClicked(idx) {
     $.post(buttonPOSTUrl, JSON.stringify(postData), handleResponse);
 }
 
+// handleResponse takes the data returned by the python server
 function handleResponse(rawData) {
     var jsonData = JSON.parse(rawData);
     sessionData = jsonData["sessionData"];
+    // when the server determines that the game is over,
+    //  it notifies via toSurvey var
+    //   and javascripts load the survey page from the directory
     if ("toSurvey" in jsonData){
         window.location.href = "survey.html";
     }
+    //server may provide a new image, new buttons text, colors, instructions
     else{
         if("imageURL" in jsonData) {
             changeImage(jsonData["imageURL"]);
@@ -52,12 +57,11 @@ function handleResponse(rawData) {
             }
             else{
                 $('#left-button').hide();
-
-                //$('#right-button').attr('style','width:200px !important;');
             }
             changeButtonLabels(jsonData["buttonLabels"]);
         }
 		
+        //handle changing button colors upon server request 
 		var bclasses = "btn-primary btn-success btn-danger btn-warning";
 		var newclass = jsonData["buttonClass"] || "btn-primary";
 		console.log(newclass);
