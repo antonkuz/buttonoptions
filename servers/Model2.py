@@ -76,6 +76,7 @@ class Data:
     ##############The following variables are different per user########################
     self.bel_t = numpy.ones([5,1])*0.2
     self.currState = startStateIndx
+    self.prevGoalStateTheta = -1
     self.id = id  #this is a user id
 
   def stateUpdateFromHumanAction(self,humanAction):
@@ -136,8 +137,19 @@ def idInitiated(id,d):
 
 #the server will call this function passing the id and the button pressed.
 #it will then reset the observable state for that class
+def setPrevGoalStateTheta(d, id, prevGoalStateTheta):
+  if idInitiated(id,d):
+    x = d[id] #dictionary
+    print("Returning user: ID={}".format(id))
+  else:
+    x = Data(id)
+    d[id] = x  
+    print ("Model2py@restartTask Error: No class instance found!")
+    print("New class instance created: id={}".format(id))
+  
+  x.prevGoalStateTheta = prevGoalStateTheta
 
-def restartTask(d, id, prevTableTheta):
+def restartTask(d, id):
   print("IN:id={}".format(id))
   #retrieve/create the class instance
   if idInitiated(id,d):
@@ -149,12 +161,14 @@ def restartTask(d, id, prevTableTheta):
     print ("Model2py@restartTask Error: No class instance found!")
     print("New class instance created: id={}".format(id))
   #logic that says what the next state will be based on the previous goal
-  if prevTableTheta == goal1StateTheta:
+  if x.prevGoalStateTheta == goal1StateTheta:
     x.currState = goal1RestartStateIndx
-  elif prevTableTheta == goal2StateTheta:
+    print "id={},current state is: {}\n".format(id, x.currState)
+  elif x.prevGoalStateTheta == goal2StateTheta:
     x.currState = goal2RestartStateIndx
+    print "id={},current state is: {}\n".format(id, x.currState)
   else:
-    print ("Model2py@restartTask invalid theta value {}".format(prevTableTheta))
+    print ("Model2py@restartTask invalid theta value {}".format(x.prevGoalStateTheta))
   
 #the server will call this function passing the id and the button pressed
 #we'll store the class instances in a dictionary with IDs as keys
@@ -182,4 +196,8 @@ def getMove(d,id,humanAction):
      message = 'You tried to turn the table COUNTER-CLOCKWISE. HERB tried to turn the table CLOCKWISE. <br> The table did not turn.'
   else:
       message = 'Model2py@getMove error: unknown string!' 
+  #for debugging
+  #instructionString ='''The current angle is: {}<br> The current state is: {}<br>  The current belief is: {}<br> You did action: {}<br> Robot did action: {}<br>
+  # {}<br> '''.format(currTableTheta, resultState, resultBelief, resultHAction, resultRAction, message)
+  #message = message + instructionString
   return (currTableTheta, message)

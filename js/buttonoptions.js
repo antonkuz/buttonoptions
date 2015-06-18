@@ -6,7 +6,7 @@
 // argument when the page is truly done loading
 $(init);
 
-var buttonPOSTUrl = "../ui/button";
+var buttonPOSTUrl = "ui/button";
 var sessionData = {"picCount": 1};
 var buttonIDs = ["#left-button", "#right-button"];
 

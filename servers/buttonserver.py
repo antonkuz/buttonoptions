@@ -11,7 +11,6 @@ import time
 app = Bottle()
 data = dict()
 d=dict()
-prevTableTheta = -1
 
 #loads static pages from the directory
 #example: website.com/index.html
@@ -121,7 +120,7 @@ def do_click():
     return json.dumps(ret)
 
   if sessionData["picCount"]==8:
-    Model2.restartTask(d,mturk_id,prevTableTheta)
+    Model2.restartTask(d,request.cookies.get('mturk_id','NOT SET'))
     ret = {"imageURL": "images/T100.JPG",
            "buttonLabels": ['<i class="fa fa-2x fa-rotate-right fa-rotate-225"></i>',
                             '<i class="fa fa-2x fa-rotate-left fa-rotate-135"></i>'],
@@ -141,7 +140,7 @@ def do_click():
   if currTableTheta==0 or currTableTheta==180:
     imageLink = "images/T{}.JPG".format(currTableTheta)
     if sessionData["picCount"]==6:
-      prevTableTheta = currTableTheta
+      Model2.setPrevGoalStateTheta(d,request.cookies.get('mturk_id','NOT SET'), currTableTheta)
       sessionData["picCount"]+=1
     elif sessionData["picCount"]==9:
       sessionData["toSurvey"] = True
@@ -168,7 +167,7 @@ def handle_survey():
   mturk_id = request.cookies.get('mturk_id', 'EXPIRED')
   for i in xrange(1,16):
     data[mturk_id].append(request.forms.get(str(i)))
-  with open('log.json', 'w') as outfile:
+  with open('output/log.json', 'w') as outfile:
     json.dump(data, outfile)
   print("User {} submitted the survey".format(mturk_id))
   return "<p> Your answers have been submitted. ID for mturk: {}".format(mturk_id)
@@ -177,9 +176,9 @@ def handle_survey():
 #we'll copy it to another file 
 def backupLog():
   i=1
-  while (os.path.isfile("log-backup-{}.json".format(i))):
+  while (os.path.isfile("output/log-backup-{}.json".format(i))):
     i+=1
-  shutil.copy("log.json","log-backup-{}.json".format(i))
+  shutil.copy("output/log.json","output/log-backup-{}.json".format(i))
  
 Model2.globalsInit()
 backupLog()
