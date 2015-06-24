@@ -26,17 +26,6 @@ function init() {
     for(var i = 0; i < buttonIDs.length; ++i) {
         $(buttonIDs[i]).click(makeClickHandler(i));
     }
-    //disable buttons until the video is over
-    disableButtons();
-
-    //can work with video only when the page is done loading
-    var vid = document.getElementById("ui-video");
-    vid.onended = function() {
-        $('#ui-image').removeAttr('style');
-        $('#ui-video').hide();
-        enableButtons();
-    };
-        
 }
 
 function buttonClicked(idx) {
@@ -57,9 +46,29 @@ function handleResponse(rawData) {
     if ("toSurvey" in jsonData){
         window.location.href = "survey.html";
     }
+
     //server may provide a new image, new buttons text, colors, instructions
     else{
-        if("imageURL" in jsonData) {
+        if(sessionData["picCount"]==6 || sessionData["picCount"]==8){
+            //videos start only after instructions
+            //STEFANOS: FOR SOME REASON SERVER RETURNS 200TO100 ON THE FIRST ROUND
+            if (jsonData["videoURL"]!="videos/200to100.mp4"){
+                $('#ui-video').attr('src', jsonData["videoURL"]);
+                $('#ui-image').hide();
+                $('#ui-video').removeAttr('style');
+                //disable buttons until the video is over
+                disableButtons();
+                //can work with video only when the page is done loading
+                var vid = document.getElementById("ui-video");
+                vid.onended = function() {
+                    $('#ui-image').removeAttr('style');
+                    $('#ui-image').attr('src', jsonData["imageURL"]);
+                    $('#ui-video').hide();
+                    enableButtons();
+                };
+            }
+        }
+        else if("imageURL" in jsonData && jsonData["imageURL"]!="videos/200to100.mp4") {
             changeImage(jsonData["imageURL"]);
         }
         if("buttonLabels" in jsonData) {

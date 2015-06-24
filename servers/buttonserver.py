@@ -142,8 +142,9 @@ def do_click():
   currTableTheta, oldTableTheta, message = \
     Model2.getMove(d,request.cookies.get('mturk_id','NOT SET'),buttonClicked)
 
+  videoLink = "videos/{}to{}.mp4".format(oldTableTheta, currTableTheta)
+  imageLink = "images/T{}.JPG".format(currTableTheta)
   if currTableTheta==0 or currTableTheta==180:
-    imageLink = "videos/{}to{}.mp4".format(oldTableTheta, currTableTheta)
     if sessionData["picCount"]==6:
       Model2.setPrevGoalStateTheta(d,request.cookies.get('mturk_id','NOT SET'), currTableTheta)
       sessionData["picCount"]+=1
@@ -151,13 +152,15 @@ def do_click():
       sessionData["toSurvey"] = True
       #timestamp
       data[mturk_id].append(str(datetime.datetime.now()))
-    ret = {"imageURL": imageLink,
+    ret = {"videoURL": videoLink,
+           "imageURL": imageLink,
            "buttonLabels": ["null","Next"],
            "instructionText": "The table is in a horizontal position. You finished the task!",
            "sessionData": sessionData}
     return json.dumps(ret)
   else:
-    ret = {"imageURL": "videos/{}to{}.mp4".format(oldTableTheta,currTableTheta),
+    ret = {"videoURL": videoLink,
+           "imageURL":imageLink,
            "buttonLabels": ['<i class="fa fa-2x fa-rotate-right fa-rotate-225"></i>',
                             '<i class="fa fa-2x fa-rotate-left fa-rotate-135"></i>'],
            "instructionText": message,
