@@ -26,6 +26,14 @@ function init() {
     for(var i = 0; i < buttonIDs.length; ++i) {
         $(buttonIDs[i]).click(makeClickHandler(i));
     }
+
+    //can work with video only when the page is done loading
+    var vid = document.getElementById("ui-video");
+    vid.onended = function() {
+        $('#ui-image').removeAttr('style');
+        $('#ui-video').hide();
+    };
+        
 }
 
 function buttonClicked(idx) {
@@ -97,3 +105,4 @@ function changeButtonLabels(newlabels) {
         $(buttonIDs[i]).html(newlabels[i]);
     }
 }
+

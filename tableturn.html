@@ -32,7 +32,12 @@
   <div class="container-fluid">
     <!--h1>Human-Robot Table Turning</h1-->
     <h3 id="instruction-text"></h3>
-    <img style="display:block" id="ui-image" src="images/Slide1.JPG" />
+    <div id="screen">
+      <img style="display:none;" id="ui-image" src="images/Slide1.JPG" />
+      <video id="ui-video" width="640" height="360" autoplay="autoplay" controls>
+        <source src="http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4" type="video/mp4">
+      </video>
+    </div> 
     <button id="left-button" type="button" class="ui-button btn btn-primary btn-lg" style="display:none;">null</button>
     <button id="right-button" type="button" class="ui-button btn btn-primary btn-lg">Next</button>
   </div>
