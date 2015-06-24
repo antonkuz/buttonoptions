@@ -82,6 +82,7 @@ class Data:
   def stateUpdateFromHumanAction(self,humanAction):
     global stateNames
     robotAction = self.getRobotActionFromPolicy(self.currState, self.bel_t)
+    oldTableTheta = self.getTableThetaFromState(self.currState)
     nextState = self.getNextStateFromHumanRobotAction(self.currState,robotAction, humanAction)
     new_bel_t = self.getNewBeliefFromHumanAction(self.currState,robotAction,nextState, self.bel_t)
     self.bel_t = new_bel_t
@@ -93,7 +94,7 @@ class Data:
     resultHAction = STR_ACTIONS[humanAction]
     resultRAction = STR_ACTIONS[robotAction]
 
-    return (currTableTheta, resultState, resultBelief, resultHAction, resultRAction)
+    return (currTableTheta, resultState, resultBelief, resultHAction, resultRAction, oldTableTheta)
 
   def getRobotActionFromPolicy(self, ss, bel_t):
     action = -1
@@ -183,7 +184,7 @@ def getMove(d,id,humanAction):
     x = Data(id)
     d[id] = x
     print("New class instance created: id={}".format(id))
-  currTableTheta, resultState, resultBelief, resultHAction, resultRAction = \
+  currTableTheta, resultState, resultBelief, resultHAction, resultRAction, oldTableTheta = \
     x.stateUpdateFromHumanAction(humanAction)
   print("OUT:theta={}".format(currTableTheta))
   if(resultHAction=='ROTATE_CLOCKWISE')and(resultRAction=='ROTATE_CLOCKWISE'):
@@ -200,4 +201,4 @@ def getMove(d,id,humanAction):
   #instructionString ='''The current angle is: {}<br> The current state is: {}<br>  The current belief is: {}<br> You did action: {}<br> Robot did action: {}<br>
   # {}<br> '''.format(currTableTheta, resultState, resultBelief, resultHAction, resultRAction, message)
   #message = message + instructionString
-  return (currTableTheta, message)
+  return (currTableTheta, oldTableTheta, message)

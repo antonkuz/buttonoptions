@@ -26,12 +26,15 @@ function init() {
     for(var i = 0; i < buttonIDs.length; ++i) {
         $(buttonIDs[i]).click(makeClickHandler(i));
     }
+    //disable buttons until the video is over
+    disableButtons();
 
     //can work with video only when the page is done loading
     var vid = document.getElementById("ui-video");
     vid.onended = function() {
         $('#ui-image').removeAttr('style');
         $('#ui-video').hide();
+        enableButtons();
     };
         
 }
@@ -72,13 +75,13 @@ function handleResponse(rawData) {
         //handle changing button colors upon server request 
 		var bclasses = "btn-primary btn-success btn-danger btn-warning";
 		var newclass = jsonData["buttonClass"] || "btn-primary";
-		console.log(newclass);
 		$(".ui-button").removeClass(bclasses).addClass(newclass);
 	
         if("instructionText" in jsonData) {
             $("#instruction-text").html(jsonData["instructionText"]);
         }
         enableButtons();
+        //dont frame the buttons as previously selected
         $('.ui-button').blur();
     }
 }
