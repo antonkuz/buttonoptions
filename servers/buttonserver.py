@@ -7,6 +7,7 @@ import Model2
 import os
 import shutil
 import time 
+import datetime
 
 app = Bottle()
 data = dict()
@@ -91,11 +92,13 @@ def do_click():
     #generate a cookie with user's ID
     gen_id = ''.join(random.choice(string.ascii_uppercase +
       string.digits) for _ in range(6))
-    response.set_cookie('mturk_id', gen_id, max_age=60*60, path='/')
+    response.set_cookie('mturk_id', gen_id, max_age=10*60, path='/')
     data[gen_id] = []
     #get ip
     ip = request.environ.get('REMOTE_ADDR')
     data[gen_id].append(ip)
+    #timestamp
+    data[gen_id].append(str(datetime.datetime.now()))
 
     ret = {"imageURL": "images/T100.JPG",
            "buttonLabels": ['<i class="fa fa-2x fa-rotate-right fa-rotate-225"></i>',
@@ -116,7 +119,7 @@ def do_click():
            "sessionData": sessionData,
        "buttonClass": "btn-primary"}
     data[mturk_id].append("round two")
-    sessionData["picCount"]+=1       
+    sessionData["picCount"]+=1
     return json.dumps(ret)
 
   if sessionData["picCount"]==8:
@@ -127,6 +130,8 @@ def do_click():
            "instructionText": "Choose how you would like to rotate the table.",
            "sessionData": sessionData,
        "buttonClass": "btn-success"}
+    #timestamp
+    data[mturk_id].append(str(datetime.datetime.now()))
     sessionData["picCount"]+=1  
     return json.dumps(ret)  
   
@@ -144,6 +149,8 @@ def do_click():
       sessionData["picCount"]+=1
     elif sessionData["picCount"]==9:
       sessionData["toSurvey"] = True
+      #timestamp
+      data[mturk_id].append(str(datetime.datetime.now()))
     ret = {"imageURL": imageLink,
            "buttonLabels": ["null","Next"],
            "instructionText": "The table is in a horizontal position. You finished the task!",
