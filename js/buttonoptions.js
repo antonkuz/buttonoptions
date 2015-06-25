@@ -79,47 +79,46 @@ function handleResponse(rawData) {
                         }
                         changeButtonLabels(jsonData["buttonLabels"]);
                     }
-                            //handle changing button colors upon server request 
-                            var bclasses = "btn-primary btn-success btn-danger btn-warning";
-                            var newclass = jsonData["buttonClass"] || "btn-primary";
-                            $(".ui-button").removeClass(bclasses).addClass(newclass);
-                            enableButtons();
-                        };
-                    }
-                    else{
-                        changeImage(jsonData["imageURL"]);
-                        if("buttonLabels" in jsonData) {
-                            if (jsonData["buttonLabels"][0]!="null"){
-                                $('#left-button').removeAttr('style');
-                            }
-                            else{
-                                $('#left-button').hide();
-                            }
-                            changeButtonLabels(jsonData["buttonLabels"]);
-                        }
-                        //handle changing button colors upon server request 
-                        var bclasses = "btn-primary btn-success btn-danger btn-warning";
-                        var newclass = jsonData["buttonClass"] || "btn-primary";
-                        $(".ui-button").removeClass(bclasses).addClass(newclass);
-                    }
-                }
-                else if("imageURL" in jsonData) {
-                    changeImage(jsonData["imageURL"]);
-                    if("buttonLabels" in jsonData) {
-                        if (jsonData["buttonLabels"][0]!="null"){
-                            $('#left-button').removeAttr('style');
-                        }
-                        else{
-                            $('#left-button').hide();
-                        }
-                        changeButtonLabels(jsonData["buttonLabels"]);
-                    }
                     //handle changing button colors upon server request 
                     var bclasses = "btn-primary btn-success btn-danger btn-warning";
                     var newclass = jsonData["buttonClass"] || "btn-primary";
                     $(".ui-button").removeClass(bclasses).addClass(newclass);
+                    enableButtons();
+                };
+            }
+            else{
+                changeImage(jsonData["imageURL"]);
+                if("buttonLabels" in jsonData) {
+                    if (jsonData["buttonLabels"][0]!="null"){
+                        $('#left-button').removeAttr('style');
+                    }
+                    else{
+                        $('#left-button').hide();
+                    }
+                    changeButtonLabels(jsonData["buttonLabels"]);
                 }
-
+                //handle changing button colors upon server request 
+                var bclasses = "btn-primary btn-success btn-danger btn-warning";
+                var newclass = jsonData["buttonClass"] || "btn-primary";
+                $(".ui-button").removeClass(bclasses).addClass(newclass);
+            }
+        }
+        else if("imageURL" in jsonData) {
+            changeImage(jsonData["imageURL"]);
+            if("buttonLabels" in jsonData) {
+                if (jsonData["buttonLabels"][0]!="null"){
+                    $('#left-button').removeAttr('style');
+                }
+                else{
+                    $('#left-button').hide();
+                }
+                changeButtonLabels(jsonData["buttonLabels"]);
+            }
+            //handle changing button colors upon server request 
+            var bclasses = "btn-primary btn-success btn-danger btn-warning";
+            var newclass = jsonData["buttonClass"] || "btn-primary";
+            $(".ui-button").removeClass(bclasses).addClass(newclass);
+        }
         //dont frame the buttons as previously selected
         $('.ui-button').blur();
     }
