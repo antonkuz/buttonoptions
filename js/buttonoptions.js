@@ -56,8 +56,6 @@ function handleResponse(rawData) {
 
         if(sessionData["picCount"]==6 || sessionData["picCount"]==7|| sessionData["picCount"]==9){
             //videos start only after instructions
-            //STEFANOS: FOR SOME REASON SERVER RETURNS 200TO100 ON THE FIRST ROUND
-
             if (sessionData["playVideo"]==1){
                 //disable buttons until the video is over
                 disableButtons();
@@ -73,7 +71,7 @@ function handleResponse(rawData) {
                     $('#ui-image').attr('src', jsonData["imageURL"]);
                     $('#ui-video').hide();
                     enableButtons();
-                }
+                };
             }
             else{
                 changeImage(jsonData["imageURL"]);

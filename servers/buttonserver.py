@@ -38,7 +38,7 @@ def do_click():
 
   #manually set value
   totalPicsNum = 19
-  survey_duration = 60*60 #1 hour. after that cookie expires
+  survey_duration = 10*60*60 #10 hours to prevent retaking
 
   #get the data that the buttonClicked posted
   requestData = json.loads(request.body.getvalue())
@@ -92,7 +92,7 @@ def do_click():
     #generate a cookie with user's ID
     gen_id = ''.join(random.choice(string.ascii_uppercase +
       string.digits) for _ in range(6))
-    response.set_cookie('mturk_id', gen_id, max_age=10*60, path='/')
+    response.set_cookie('mturk_id', gen_id, max_age=survey_duration, path='/')
     data[gen_id] = []
     #get ip
     ip = request.environ.get('REMOTE_ADDR')
@@ -100,6 +100,7 @@ def do_click():
     #timestamp
     data[gen_id].append(str(datetime.datetime.now()))
     sessionData["playVideo"] = 0
+    sessionData["playedLong"] = 0
     ret = {"imageURL": "images/T100.JPG",
            "buttonLabels": ['<i class="fa fa-2x fa-rotate-right fa-rotate-225"></i>',
                             '<i class="fa fa-2x fa-rotate-left fa-rotate-135"></i>'],
@@ -144,7 +145,13 @@ def do_click():
   currTableTheta, oldTableTheta, message = \
     Model2.getMove(d,request.cookies.get('mturk_id','NOT SET'),buttonClicked)
 
-  videoLink = "videos/{}to{}.mp4".format(oldTableTheta, currTableTheta)
+  #play the long video if the human-robot actions
+  # are the same and it's the first time this is happening
+  suffix=""
+  if oldTableTheta==currTableTheta and sessionData["playedLong"]==0:
+    suffix="l"
+    sessionData["playedLong"]==1
+  videoLink = "videos/{}to{}{}.mp4".format(oldTableTheta, currTableTheta,suffix)
   imageLink = "images/T{}.JPG".format(currTableTheta)
   if currTableTheta==0 or currTableTheta==180:
     if sessionData["picCount"]==6:
