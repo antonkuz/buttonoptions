@@ -49,15 +49,18 @@ function handleResponse(rawData) {
 
     //server may provide a new image, new buttons text, colors, instructions
     else{
-        if(sessionData["picCount"]==6 || sessionData["picCount"]==8){
+        enableButtons();
+
+        if(sessionData["picCount"]==6 || sessionData["picCount"]==9){
             //videos start only after instructions
             //STEFANOS: FOR SOME REASON SERVER RETURNS 200TO100 ON THE FIRST ROUND
-            if (jsonData["videoURL"]!="videos/200to100.mp4"){
+
+            if (sessionData["playVideo"]==1){
+                //disable buttons until the video is over
+                disableButtons();
                 $('#ui-video').attr('src', jsonData["videoURL"]);
                 $('#ui-image').hide();
                 $('#ui-video').removeAttr('style');
-                //disable buttons until the video is over
-                disableButtons();
                 //can work with video only when the page is done loading
                 var vid = document.getElementById("ui-video");
                 vid.onended = function() {
@@ -65,10 +68,13 @@ function handleResponse(rawData) {
                     $('#ui-image').attr('src', jsonData["imageURL"]);
                     $('#ui-video').hide();
                     enableButtons();
-                };
+                }
+            }
+            else{
+                changeImage(jsonData["imageURL"]);
             }
         }
-        else if("imageURL" in jsonData && jsonData["imageURL"]!="videos/200to100.mp4") {
+        else if("imageURL" in jsonData) {
             changeImage(jsonData["imageURL"]);
         }
         if("buttonLabels" in jsonData) {
@@ -89,7 +95,6 @@ function handleResponse(rawData) {
         if("instructionText" in jsonData) {
             $("#instruction-text").html(jsonData["instructionText"]);
         }
-        enableButtons();
         //dont frame the buttons as previously selected
         $('.ui-button').blur();
     }

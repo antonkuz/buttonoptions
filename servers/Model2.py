@@ -112,7 +112,7 @@ class Data:
 
   def getTableThetaFromState(self, ss):
     thetaIndx = int(ss/4)
-    if(thetaIndx>=0) and (thetaIndx<=18):
+    if(thetaIndx>=0) and (thetaIndx<=9):
      return thetaIndx*20
     else:
      return startStateTheta
@@ -198,7 +198,7 @@ def getMove(d,id,humanAction):
   else:
       message = 'Model2py@getMove error: unknown string!' 
   #for debugging
-  #instructionString ='''The current angle is: {}<br> The current state is: {}<br>  The current belief is: {}<br> You did action: {}<br> Robot did action: {}<br>
-  # {}<br> '''.format(currTableTheta, resultState, resultBelief, resultHAction, resultRAction, message)
-  #message = message + instructionString
+  instructionString ='''The current angle is: {}<br> The current state is: {}<br>  The current belief is: {}<br> You did action: {}<br> Robot did action: {}<br>
+   Old angle is {}<br> '''.format(currTableTheta, resultState, resultBelief, resultHAction, resultRAction, oldTableTheta)
+  message = message + instructionString
   return (currTableTheta, oldTableTheta, message)

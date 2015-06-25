@@ -99,7 +99,7 @@ def do_click():
     data[gen_id].append(ip)
     #timestamp
     data[gen_id].append(str(datetime.datetime.now()))
-
+    sessionData["playVideo"] = 0
     ret = {"imageURL": "images/T100.JPG",
            "buttonLabels": ['<i class="fa fa-2x fa-rotate-right fa-rotate-225"></i>',
                             '<i class="fa fa-2x fa-rotate-left fa-rotate-135"></i>'],
@@ -113,6 +113,7 @@ def do_click():
   mturk_id = request.cookies.get('mturk_id','NOT SET')
 
   if sessionData["picCount"]==7:
+    sessionData["playVideo"] = 0
     ret = {"imageURL": "images/Slide5.JPG",
            "buttonLabels": ["null", "START"],
            "instructionText": " ",
@@ -123,6 +124,7 @@ def do_click():
     return json.dumps(ret)
 
   if sessionData["picCount"]==8:
+    sessionData["playVideo"] = 0
     Model2.restartTask(d,request.cookies.get('mturk_id','NOT SET'))
     ret = {"imageURL": "images/T100.JPG",
            "buttonLabels": ['<i class="fa fa-2x fa-rotate-right fa-rotate-225"></i>',
@@ -159,6 +161,7 @@ def do_click():
            "sessionData": sessionData}
     return json.dumps(ret)
   else:
+    sessionData["playVideo"] = 1
     ret = {"videoURL": videoLink,
            "imageURL":imageLink,
            "buttonLabels": ['<i class="fa fa-2x fa-rotate-right fa-rotate-225"></i>',
