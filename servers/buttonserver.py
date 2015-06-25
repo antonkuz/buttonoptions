@@ -150,7 +150,7 @@ def do_click():
   suffix=""
   if oldTableTheta==currTableTheta and sessionData["playedLong"]==0:
     suffix="l"
-    sessionData["playedLong"]==1
+    sessionData["playedLong"]=1
   videoLink = "videos/{}to{}{}.mp4".format(oldTableTheta, currTableTheta,suffix)
   imageLink = "images/T{}.JPG".format(currTableTheta)
   if currTableTheta==0 or currTableTheta==180:
