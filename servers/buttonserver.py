@@ -154,6 +154,7 @@ def do_click():
       sessionData["toSurvey"] = True
       #timestamp
       data[mturk_id].append(str(datetime.datetime.now()))
+    
     ret = {"videoURL": videoLink,
            "imageURL": imageLink,
            "buttonLabels": ["null","Next"],
@@ -166,7 +167,7 @@ def do_click():
            "imageURL":imageLink,
            "buttonLabels": ['<i class="fa fa-2x fa-rotate-right fa-rotate-225"></i>',
                             '<i class="fa fa-2x fa-rotate-left fa-rotate-135"></i>'],
-           "instructionText": message,
+           "instructionText": "<br>",
            "sessionData": sessionData,
            "buttonClass": "btn-success"}
     return json.dumps(ret)
