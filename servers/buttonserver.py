@@ -98,7 +98,9 @@ def do_click():
     ip = request.environ.get('REMOTE_ADDR')
     data[gen_id].append(ip)
     #timestamp
-    data[gen_id].append(str(datetime.datetime.now()))
+    startTime = datetime.datetime.now()
+    data[gen_id].append("start: "+ str(startTime))
+    sessionData["start"] = startTime
     sessionData["playVideo"] = 0
     sessionData["playedLong"] = 0
     ret = {"imageURL": "images/T100.jpg",
@@ -122,6 +124,11 @@ def do_click():
        "buttonClass": "btn-primary"}
     data[mturk_id].append("round two")
     sessionData["picCount"]+=1
+    #timestamp
+    firstFinish = datetime.datetime.now()
+    data[mturk_id].append("firstFinish: "+ str(firstFinish))
+    timeDelta = firstFinish-sessionData["start"]
+    data[mturk_id].append("timeDelta: "+ str(timeDelta))
     return json.dumps(ret)
 
   if sessionData["picCount"]==8:
@@ -134,7 +141,9 @@ def do_click():
            "sessionData": sessionData,
        "buttonClass": "btn-success"}
     #timestamp
-    data[mturk_id].append(str(datetime.datetime.now()))
+    secondStart = datetime.datetime.now()
+    data[mturk_id].append("secondStart: "+ str(secondStart))
+    sessionData["secondStart"] = secondStart
     sessionData["picCount"]+=1  
     return json.dumps(ret)  
   
@@ -160,7 +169,10 @@ def do_click():
     elif sessionData["picCount"]==9:
       sessionData["toSurvey"] = True
       #timestamp
-      data[mturk_id].append(str(datetime.datetime.now()))
+      secondFinish = datetime.datetime.now()
+      data[mturk_id].append("secondFinish: "+ str(secondFinish))
+      timeDelta = secondFinish-sessionData["secondStart"]
+      data[mturk_id].append("timeDelta2: "+ str(timeDelta))
     
     ret = {"videoURL": videoLink,
            "imageURL": imageLink,
