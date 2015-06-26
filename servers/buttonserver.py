@@ -101,7 +101,7 @@ def do_click():
     data[gen_id].append(str(datetime.datetime.now()))
     sessionData["playVideo"] = 0
     sessionData["playedLong"] = 0
-    ret = {"imageURL": "images/T100.JPG",
+    ret = {"imageURL": "images/T100.jpg",
            "buttonLabels": ['<i class="fa fa-2x fa-rotate-right fa-rotate-225"></i>',
                             '<i class="fa fa-2x fa-rotate-left fa-rotate-135"></i>'],
            "instructionText": "Choose how you would like to rotate the table.",
@@ -127,7 +127,7 @@ def do_click():
   if sessionData["picCount"]==8:
     sessionData["playVideo"] = 0
     Model2.restartTask(d,request.cookies.get('mturk_id','NOT SET'))
-    ret = {"imageURL": "images/T100.JPG",
+    ret = {"imageURL": "images/T100.jpg",
            "buttonLabels": ['<i class="fa fa-2x fa-rotate-right fa-rotate-225"></i>',
                             '<i class="fa fa-2x fa-rotate-left fa-rotate-135"></i>'],
            "instructionText": "Choose how you would like to rotate the table.",
@@ -152,7 +152,7 @@ def do_click():
     suffix="l"
     sessionData["playedLong"]=1
   videoLink = "videos/{}to{}{}.mp4".format(oldTableTheta, currTableTheta,suffix)
-  imageLink = "images/T{}.JPG".format(currTableTheta)
+  imageLink = "images/T{}.jpg".format(currTableTheta)
   if currTableTheta==0 or currTableTheta==180:
     if sessionData["picCount"]==6:
       Model2.setPrevGoalStateTheta(d,request.cookies.get('mturk_id','NOT SET'), currTableTheta)
