@@ -12,7 +12,8 @@ import datetime
 app = Bottle()
 data = dict()
 d=dict()
-
+timestart1 = dict()
+timestart2 = dict()
 #loads static pages from the directory
 #example: website.com/index.html
 #server will load index.html from the directory
@@ -100,7 +101,7 @@ def do_click():
     #timestamp
     startTime = datetime.datetime.now()
     data[gen_id].append("start: "+ str(startTime))
-    sessionData["start"] = startTime
+    timestart1[gen_id] = startTime
     sessionData["playVideo"] = 0
     sessionData["playedLong"] = 0
     ret = {"imageURL": "images/T100.jpg",
@@ -127,8 +128,8 @@ def do_click():
     #timestamp
     firstFinish = datetime.datetime.now()
     data[mturk_id].append("firstFinish: "+ str(firstFinish))
-    timeDelta = firstFinish-sessionData["start"]
-    data[mturk_id].append("timeDelta: "+ str(timeDelta))
+    timeDelta = firstFinish-timestart1[mturk_id]
+    data[mturk_id].append("timeDelta: "+ str(timeDelta.total_seconds()))
     return json.dumps(ret)
 
   if sessionData["picCount"]==8:
@@ -143,7 +144,7 @@ def do_click():
     #timestamp
     secondStart = datetime.datetime.now()
     data[mturk_id].append("secondStart: "+ str(secondStart))
-    sessionData["secondStart"] = secondStart
+    timestart2[mturk_id] = secondStart
     sessionData["picCount"]+=1  
     return json.dumps(ret)  
   
@@ -171,8 +172,8 @@ def do_click():
       #timestamp
       secondFinish = datetime.datetime.now()
       data[mturk_id].append("secondFinish: "+ str(secondFinish))
-      timeDelta = secondFinish-sessionData["secondStart"]
-      data[mturk_id].append("timeDelta2: "+ str(timeDelta))
+      timeDelta = secondFinish-timestart2[mturk_id]
+      data[mturk_id].append("timeDelta2: "+ str(timeDelta.total_seconds()))
     
     ret = {"videoURL": videoLink,
            "imageURL": imageLink,
