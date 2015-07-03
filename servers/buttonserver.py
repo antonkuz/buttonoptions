@@ -199,7 +199,7 @@ def do_click():
 @app.post('/submit_survey')
 def handle_survey():
   mturk_id = request.cookies.get('mturk_id', 'EXPIRED')
-  for i in xrange(1,16):
+  for i in xrange(1,17):
     data[mturk_id].append(request.forms.get(str(i)))
   with open('output/log.json', 'w') as outfile:
     json.dump(data, outfile)

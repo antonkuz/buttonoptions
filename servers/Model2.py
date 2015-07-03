@@ -75,6 +75,11 @@ class Data:
   def __init__(self, id):
     ##############The following variables are different per user########################
     self.bel_t = numpy.ones([5,1])*0.2
+    self.bel_t[0] = 0.14
+    self.bel_t[1] = 0.5
+    self.bel_t[2] = 0.005
+    self.bel_t[3] = 0.005
+    self.bel_t[4] = 0.35
     self.currState = startStateIndx
     self.prevGoalStateTheta = -1
     self.id = id  #this is a user id
