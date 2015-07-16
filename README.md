@@ -12,20 +12,20 @@
 ###Files
 
 ####tableturn.html
-    - html layout for the survey
-    - links our custom css (mystyle.css, font-awesome), js(js/buttonoptions.js)
+  - html layout for the survey
+  - links our custom css (mystyle.css, font-awesome), js(js/buttonoptions.js)
 
-  ####js/buttonoptions.js
-    - handles all buttonclicks
-    - keeps user specific data (picCount) in sessionData
+####js/buttonoptions.js
+  - handles all buttonclicks
+  - keeps user specific data (picCount) in sessionData
 
-  ####servers/buttonserver.py
-    - handles post requests from javascript on the client side
-    - redirects to html pages
+####servers/buttonserver.py
+  - handles post requests from javascript on the client side
+  - redirects to html pages
 
-  ####js/surveyhandler.js
-    - catches submit button click on the survey page
-    - goes over the input radiobuttons/textfields
+####js/surveyhandler.js
+  - catches submit button click on the survey page
+  - goes over the input radiobuttons/textfields
 
   ####css/*
   - bootstrap for buttons
