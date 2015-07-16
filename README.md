@@ -48,7 +48,8 @@
 
 ###servers/buttonserver.py
   This file is responsible for returning data - instruction images, game status - to the client.
-####navigation for the client
+
+####Navigation for the client
   The client communication comes in the ``` requestData ``` variable. It has data such as what slide the user is currently on, ``` (sessionData["picCount"]) ``` or id of the button that was clicked ``` requestData["buttonID"] ```
 ```python
 #go to next/prev pic according to button clicked
@@ -74,7 +75,8 @@ return json.dumps(ret)
 ```
   buttonoptions.js deals with the returned json.
 
-####identifying the users
+
+####Identifying the users
 Generate an id for the client and keep it in their cookies:
 ```python
 gen_id = ''.join(random.choice(string.ascii_uppercase +
@@ -86,12 +88,14 @@ Retrieve the cookie to identify the user:
 mturk_id = request.cookies.get('mturk_id','NOT SET')
 ```
 
-####logging user actions
+
+####Logging user actions
 buttonserver.py keeps everything in the ``` data ``` dictionary: keys - user IDs, values - lists. Example - logging the time the user started the survey:
 ```python
 startTime = datetime.datetime.now()
 data[gen_id].append("start: "+ str(startTime))
 ```
+
 
 ###js/buttonoptions.js
 Receives the data that buttonserver.py returned 
@@ -99,6 +103,9 @@ Receives the data that buttonserver.py returned
 var jsonData = JSON.parse(rawData);
 sessionData = jsonData["sessionData"]
 ```
+
+
+####Loading new content on the page
 Example: get the image url from json returned by the server and view it on the page
 ```python
 changeImage(jsonData["imageURL"]);
