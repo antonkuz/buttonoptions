@@ -48,23 +48,23 @@
 
 ####servers/buttonserver.py
   This file is responsible for returning data - instruction images, game status - to the client.
-  The client communication comes in the ''' requestData ''' variable. It has data such as what slide the user is currently on, ''' (sessionData["picCount"]) ''' or id of the button that was clicked ''' requestData["buttonID"] '''
+  The client communication comes in the ``` requestData ``` variable. It has data such as what slide the user is currently on, ``` (sessionData["picCount"]) ``` or id of the button that was clicked ``` requestData["buttonID"] ```
 
 
-'''python
+```python
 #go to next/prev pic according to button clicked
 buttonClicked = requestData["buttonID"]
 if sessionData["picCount"]<5:
-	if buttonClicked==0:
-	  sessionData["picCount"] -= 1
-	elif buttonClicked==1:
-	  sessionData["picCount"] += 1
-'''
+  if buttonClicked==0:
+    sessionData["picCount"] -= 1
+  elif buttonClicked==1:
+    sessionData["picCount"] += 1
+```
   You will need to adjust that for the type of survey/number of slides you have
 
   For different slides we have different images, button labels.
   Example - return slide1.jpg and don't display 'back' button
-'''python
+```python
 if sessionData["picCount"]==1:
 ret = {"imageURL": "images/Slide1.JPG",
        "buttonLabels": ["null", "Next"],
@@ -72,7 +72,7 @@ ret = {"imageURL": "images/Slide1.JPG",
        "sessionData": sessionData,
    "buttonClass": "btn-primary"}
 return json.dumps(ret)
-'''
+```
   buttonoptions.js deals with the returned json.
 
 
